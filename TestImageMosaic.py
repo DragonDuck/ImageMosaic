@@ -26,6 +26,9 @@ def test_create_3d_mosaic():
 
     return ImageMosaic.create_mosaic(images=images, rows_first=False)
 
+mosaic2d = test_create_2d_mosaic()
+mosaic3d = test_create_3d_mosaic()
+
 plt.figure(1)
 plt.subplot(1, 2, 1)
 plt.imshow(mosaic2d)
