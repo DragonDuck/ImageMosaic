@@ -1,4 +1,4 @@
-# NumpyMosaic
+# ImageMosaic
 Create a mosaic of a list of numpy arrays, essentially a 2D concatenation, with an optional border inbetween images. It can take images of different sizes and centers them in their individual fields.
 
 The package consists of a single function, 'create_mosaic(...)', which takes the following arguments:
