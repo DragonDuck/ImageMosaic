@@ -1,1 +1,2 @@
 from ImageMosaic import create_mosaic
+from ImageMosaic import MosaicException
