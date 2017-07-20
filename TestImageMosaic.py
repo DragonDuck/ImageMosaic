@@ -1,5 +1,6 @@
 import numpy as np
 import ImageMosaic
+import matplotlib.pyplot as plt
 
 
 def test_create_2d_mosaic():
@@ -25,3 +26,8 @@ def test_create_3d_mosaic():
 
     return ImageMosaic.create_mosaic(images=images, rows_first=False)
 
+plt.figure(1)
+plt.subplot(1, 2, 1)
+plt.imshow(mosaic2d)
+plt.subplot(1, 2, 2)
+plt.imshow(mosaic3d)

@@ -11,7 +11,7 @@ def create_mosaic(
         rows_first=True):
     """
     Creates a mosaic of input images. 'images' should be an iterable of
-    2D or 3D images. If they're 3D then they must have the expected shape
+    2D or 3D images. If they're 3D then they must have the shape
     (spatial, spatial, channels).
 
     Creates a square mosaic unless nrows and/or ncols is not 'None'. If both
@@ -20,12 +20,16 @@ def create_mosaic(
     :param images: An iterable of 2D or 3D numpy arrays
     :param nrows: Custom number of rows
     :param ncols: Custom number of columns
-    :param border_val:
-    :param border_size:
+    :param border_val: The value of the background and borders
+    :param border_size: The size of the border between images
     :param rows_first: A boolean indicating if the mosaic should be populated
-    by rows (True) or columns (False)
+    by rows (True) or columns (False) first
     :return: 
     """
+
+    # Validate
+    if border_size < 0:
+        raise MosaicException("'border_size' must be >= 0")
 
     # Trivial cases
     if len(images) == 0:
@@ -87,6 +91,9 @@ def create_mosaic(
     else:
         n_cols = ncols
         n_rows = nrows
+
+    if n_rows <= 0 or n_cols <= 0:
+        raise MosaicException("'nrows' and 'ncols' must both be > 0")
 
     if n_cols * n_rows < len(images):
         raise MosaicException(
