@@ -9,6 +9,16 @@ The package consists of a single function, 'create_mosaic(...)', which takes the
 * border_size (default: 5): The size of the border between images
 * rows_first (default: True): A boolean indicating if the mosaic should be populated by rows (True) or columns (False) first
 
+## Installation
+Install this package via PyPI:
+
+    pip install ImageMosaic
+
+Or by downloading this repo and running
+
+    python setup.py install
+
+## Usage Example
 An example is provided below (this code is also available in the file TestImageMosaic.py):
 
     import numpy as np
