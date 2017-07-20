@@ -7,7 +7,8 @@ class MosaicException(Exception):
 
 
 def create_mosaic(
-        images, nrows=None, ncols=None, border_val=0, border_size=5):
+        images, nrows=None, ncols=None, border_val=0, border_size=5,
+        rows_first=True):
     """
     Creates a mosaic of input images. 'images' should be an iterable of
     2D or 3D images. If they're 3D then they must have the expected shape
@@ -21,6 +22,8 @@ def create_mosaic(
     :param ncols: Custom number of columns
     :param border_val:
     :param border_size:
+    :param rows_first: A boolean indicating if the mosaic should be populated
+    by rows (True) or columns (False)
     :return: 
     """
 
@@ -85,26 +88,35 @@ def create_mosaic(
         n_cols = ncols
         n_rows = nrows
 
-    img_w = images[0].shape[1]
-    img_h = images[0].shape[0]
+    if n_cols * n_rows < len(images):
+        raise MosaicException(
+            "Mosaic grid too small: n_rows * n_cols < len(images)")
+
+    size_0 = images[0].shape[0]
+    size_1 = images[0].shape[1]
 
     if imdims[0] == 2:
         out_block = border_val * np.ones(
-            (img_h * n_rows + border_size * (n_rows - 1),
-             img_w * n_cols + border_size * (n_cols - 1)),
+            (size_0 * n_rows + border_size * (n_rows - 1),
+             size_1 * n_cols + border_size * (n_cols - 1)),
             dtype=dtypes[0])
     else:
         out_block = border_val * np.ones(
-            (img_h * n_rows + border_size * (n_rows - 1),
-             img_w * n_cols + border_size * (n_cols - 1),
+            (size_0 * n_rows + border_size * (n_rows - 1),
+             size_1 * n_cols + border_size * (n_cols - 1),
              images[0].shape[2]), dtype=dtypes[0])
     for fld in range(len(images)):
-        nr = int(np.floor(fld / n_rows))
-        nc = fld - n_rows * nr
-        x_start = nr * (img_h + border_size)
-        x_end = x_start + img_h
-        y_start = nc * (img_w + border_size)
-        y_end = y_start + img_w
-        out_block[x_start:x_end, y_start:y_end] = images[fld]
+        if rows_first:
+            index_0 = int(np.floor(fld / n_cols))
+            index_1 = fld - (n_cols * index_0)
+        else:
+            index_1 = int(np.floor(fld / n_rows))
+            index_0 = fld - (n_rows * index_1)
+
+        start0 = index_0 * (size_0 + border_size)
+        end0 = start0 + size_0
+        start1 = index_1 * (size_1 + border_size)
+        end1 = start1 + size_1
+        out_block[start0:end0, start1:end1] = images[fld]
 
     return out_block
